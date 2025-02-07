@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@inject IConfiguration configuration
+@{
+    ViewData["Title"] = "Index";
+    int user_sr_number = 1;
+    string superUserUsername = configuration["AdminUser:Name"];
+}
+<div class="container mt-3"> <!-- Ensure proper spacing around the main container -->
+    <div class="row justify-content-center">
+        <div class="col-md-10"> <!-- Adjust column size as needed -->
+            <h2 class="text-center mt-3 mb-4">Admin Panel</h2> <!-- Adjusted margin for top and bottom -->
+            <div class="table-responsive"> <!-- Ensures table responsiveness -->
+                <table class="table table-hover shadow"> <!-- Added table-hover for effect and shadow for depth -->
+                    <thead class="thead-light"> 
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Username</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user_sr_number</td>
+                                <td>@user.Email</td>
+                                <td>@user.UserName</td>
+                                 <td>
+                                    @if (user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow)
+                                    {
+                                        <!-- User is blocked, show Unblock button -->
+                                        <form method="post" action="@Url.Action("UnblockUser", new { userId = user.Id })" class="d-inline">
+                                            <button type="submit" class="btn btn-success btn-sm">Unblock</button>
+                                        </form>
+                                    }
+                                    else if(user.UserName != superUserUsername)
+                                    {
+                                        <!-- User is not blocked, show Block button -->
+                                        <form method="post" action="@Url.Action("BlockUser", new { userId = user.Id })" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm">Block</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-danger btn-sm" disabled>Block</button>
+                                    }
+                                    @if (!(await UserManager.IsInRoleAsync(user, "Admin")))
+                                    {
+                                        <form method="post" action="@Url.Action("MakeAdmin", new { userId = user.Id })"  class="d-inline">
+                                            <button class="btn btn-info btn-sm" type="submit">Make Admin</button>
+                                        </form>
+                                        
+                                    }
+                                    else if (user.UserName != superUserUsername)
+                                    {
+                                        <form method="post" action="@Url.Action("RemoveAdmin", new { userId = user.Id })"  class="d-inline">
+                                            <button class="btn btn-warning btn-sm" type="submit">Remove Admin</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                            <button class="btn btn-warning btn-sm" disabled>Remove Admin</button>
+                                    }
+                       
+                                    <a asp-controller="Petitions" asp-action="UserPetitionsById" asp-route-userId="@user.Id" class="btn btn-secondary btn-sm">Petitions</a>
+
+                                </td>
+                            </tr>
+                            user_sr_number++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

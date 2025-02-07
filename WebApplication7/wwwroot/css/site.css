@@ -1,0 +1,40 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.secondary-color {
+    color: #dc3545;
+}
+
+header .navbar {
+    background-color: darkred !important;
+}
+
+footer {
+    position: relative !important;
+    margin-top: auto;
+}
+
+hr {
+    background-color: black;
+}

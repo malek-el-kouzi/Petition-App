@@ -1,0 +1,36 @@
+﻿@model WebApplication7.Models.Petition
+
+ @{
+     bool hasSigned = Model.Signatures.Any(s => s.UserName == @User.Identity.Name);
+ }
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="@Model.ImagePath" class="card-img-top" alt="@Model.Title" width="240" height="360">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Title</h5>
+                        <p class="card-text">@Model.Description</p>
+                        @if (!hasSigned)
+                        {
+                            <a asp-controller="Signatures" asp-action="Create" asp-route-petitionId="@Model.PetitionId" class="btn btn-danger">Sign</a>
+                        }
+                        else
+                        {
+                            var signature = Model.Signatures.FirstOrDefault(s => s.UserName == User.Identity.Name);
+                            <a asp-controller="Signatures" asp-action="Delete" asp-route-id="@signature.SignatureId" class="btn btn-danger">Unsign</a>
+                        }
+                        
+                        <a asp-controller="Petitions" asp-action="Details" asp-route-id="@Model.PetitionId" class="btn btn-secondary">Details</a>
+                         <button class="btn btn-info" onclick="copyToClipboard('https://localhost:44322/Petitions/Details/'+@Model.PetitionId)">Share</button>
+
+                        @if(User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Petitions" asp-action="Delete" asp-route-Id="@Model.PetitionId" class="btn btn-warning">Delete</a>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted mr-5">Created on @Model.DateCreated.ToString("dd-MM-yyyy HH:mm:ss")</small><small class="text-muted">
+                            @Model.SignatureCount Supporters
+                        </small>
+                    </div>
+                </div>
+            </div>

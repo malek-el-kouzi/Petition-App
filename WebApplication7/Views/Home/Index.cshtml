@@ -1,0 +1,30 @@
+﻿@model IEnumerable<WebApplication7.Models.Petition>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center">
+                <h1 class="display-4">Welcome to MyPetitionApp</h1>
+                <p class="lead">Empowering Change, One Signature at a Time</p>
+            </div>
+            <div class="mt-5">
+                <p class="text-center">Do you have a cause that needs support? Start a petition today and gather signatures to make a difference in your community.</p>
+                <p class="text-center">Already have a petition? Share it with others and rally support!</p>
+                <div class="text-center">
+                    <a href="/Petitions/Create" class="btn btn-danger btn-lg">Create a Petition</a>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row row-cols-1 row-cols-md-2 mt-3">
+         @foreach (var item in Model)
+        {
+            <partial name="_PetitionCard" model="item" />
+        }
+    </div>
+</div>

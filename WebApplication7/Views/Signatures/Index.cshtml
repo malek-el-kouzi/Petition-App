@@ -1,0 +1,48 @@
+﻿@model IEnumerable<WebApplication7.Models.Signature>
+
+@{
+    ViewData["Title"] = "My Signed Petitions";
+}
+
+
+<div class="row text-center">
+    <h2 class="mb-2"> My Signed Petitions</h2>
+</div>
+
+ @if (Model.Any()) 
+ {
+    <div class="row row-cols-1 row-cols-md-2 mt-3">
+   
+  
+            @foreach (var item in Model)
+            {
+                <div class="col mb-4">
+                    <div class="card">
+                        <img src="@item.Petition.ImagePath" class="card-img-top" alt="@item.Petition.Title" width="240" height="360">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Petition.Title</h5>
+                            <p class="card-text">@item.Petition.Description</p>
+                            <a asp-controller="Signatures" asp-action="Delete" asp-route-id="@item.SignatureId" class="btn btn-danger">Unsign</a>
+                            <a asp-action="Details" asp-route-id="@item.PetitionId" class="btn btn-secondary">Details</a>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted mr-5">Created on @item.Petition.DateCreated.ToString("dd-MM-yyyy HH:mm:ss")</small><small class="text-muted">
+                                @item.Petition.SignatureCount Supporters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+    
+    </div>
+}
+else
+{
+     <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="alert alert-info text-center" role="alert" style="width: 100%;">
+                No petitions signed.
+            </div>
+        </div>
+    </div>
+}
